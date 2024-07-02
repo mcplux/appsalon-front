@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import VueTailwindDatePicker from 'vue-tailwind-datepicker'
 import { useAppointmentsStore } from '@/stores/appointments'
 import selectedService from '@/components/SelectedService.vue'
 import { formatCurrency } from '@/helpers'
@@ -21,6 +22,19 @@ const appointmentsStore = useAppointmentsStore()
     <p class="text-white text-right text-2xl">
       Total Amount: <span class="font-black">{{ formatCurrency(appointmentsStore.totalAmount) }}</span>
     </p>
+  </div>
+
+  <div class="space-y-8" v-if="!appointmentsStore.noServiceSelected">
+    <h3 class="text-3xl font-extrabold text-white">Date and time</h3>
+    <div class="lg:flex gap-5 items-start">
+      <div class="w-full lg:w-96 bg-white flex justify-center rounded-lg">
+        <VueTailwindDatePicker 
+          i18n="en"
+          as-single
+          no-input
+        />
+      </div>
+    </div>
   </div>
 
 </template>
