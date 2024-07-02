@@ -4,6 +4,7 @@ import type { Service } from '@/types'
 
 export const useAppointmentsStore = defineStore('appointments', () => {
   const services:Ref<Service[]> = ref([])
+  const date:Ref<string> = ref('')
   
   function onServiceSelected(service:Service):void {
     if(services.value.some(selectedService => selectedService.id === service.id)) {
@@ -30,6 +31,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
 
   return {
     services,
+    date,
     onServiceSelected,
     isServiceSelected,
     noServiceSelected,

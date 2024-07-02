@@ -32,6 +32,11 @@ const appointmentsStore = useAppointmentsStore()
           i18n="en"
           as-single
           no-input
+          v-model="appointmentsStore.date"
+          :formatter="{
+            date: 'DD/MM/YYYY',
+            month: 'MMMM',
+          }"
         />
       </div>
     </div>
