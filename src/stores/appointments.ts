@@ -1,10 +1,11 @@
-import { computed, ref, type ComputedRef, type Ref } from 'vue'
+import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import type { Service } from '@/types'
 
 export const useAppointmentsStore = defineStore('appointments', () => {
   const services:Ref<Service[]> = ref([])
   const date:Ref<string> = ref('')
+  const hours:Ref<string[]> = ref([])
   
   function onServiceSelected(service:Service):void {
     if(services.value.some(selectedService => selectedService.id === service.id)) {
@@ -29,9 +30,19 @@ export const useAppointmentsStore = defineStore('appointments', () => {
   
   })
 
+  onMounted(() => {
+    const startHour = 10
+    const endHour = 19
+
+    for(let hour = startHour; hour <= endHour; hour++) {
+      hours.value.push(`${hour}:00`)
+    }
+  })
+
   return {
     services,
     date,
+    hours,
     onServiceSelected,
     isServiceSelected,
     noServiceSelected,

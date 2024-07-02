@@ -39,6 +39,15 @@ const appointmentsStore = useAppointmentsStore()
           }"
         />
       </div>
+
+      <div class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-3 mt-10 lg:mt-0">
+        <button 
+          v-for="hour in appointmentsStore.hours"
+          class="block text-blue-500 rounded-lg text-xl font-black p-3 bg-white"
+        >
+          {{ hour }}
+        </button>
+      </div>
     </div>
   </div>
 
