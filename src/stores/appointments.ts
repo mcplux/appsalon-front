@@ -6,6 +6,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
   const services:Ref<Service[]> = ref([])
   const date:Ref<string> = ref('')
   const hours:Ref<string[]> = ref([])
+  const time:Ref<string> = ref('')
   
   function onServiceSelected(service:Service):void {
     if(services.value.some(selectedService => selectedService.id === service.id)) {
@@ -30,6 +31,10 @@ export const useAppointmentsStore = defineStore('appointments', () => {
   
   })
 
+  const isValidReservation:ComputedRef<boolean> = computed(() => {
+    return services.value.length > 0 && date.value !== '' && time.value !== ''
+  })
+
   onMounted(() => {
     const startHour = 10
     const endHour = 19
@@ -43,9 +48,11 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     services,
     date,
     hours,
+    time,
     onServiceSelected,
     isServiceSelected,
     noServiceSelected,
+    isValidReservation,
     totalAmount,
   }
 })

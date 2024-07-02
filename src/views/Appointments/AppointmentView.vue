@@ -5,6 +5,11 @@ import selectedService from '@/components/SelectedService.vue'
 import { formatCurrency } from '@/helpers'
 
 const appointmentsStore = useAppointmentsStore()
+
+const disableDates = (date:Date):boolean => {
+  const today = new Date()
+  return date < today || date.getMonth() > today.getMonth() + 1 || [0, 6].includes(date.getDay())
+}
 </script>
 
 <template>
@@ -29,6 +34,8 @@ const appointmentsStore = useAppointmentsStore()
     <div class="lg:flex gap-5 items-start">
       <div class="w-full lg:w-96 bg-white flex justify-center rounded-lg">
         <VueTailwindDatePicker 
+          :disable-date="disableDates"
+          disable-in-range
           i18n="en"
           as-single
           no-input
@@ -43,11 +50,21 @@ const appointmentsStore = useAppointmentsStore()
       <div class="flex-1 grid grid-cols-1 xl:grid-cols-2 gap-3 mt-10 lg:mt-0">
         <button 
           v-for="hour in appointmentsStore.hours"
-          class="block text-blue-500 rounded-lg text-xl font-black p-3 bg-white"
+          class="block text-blue-500 rounded-lg text-xl font-black p-3"
+          :class="[ appointmentsStore.time === hour ? 'bg-blue-500 text-white' : 'bg-white' ]"
+          @click="appointmentsStore.time = hour"
         >
           {{ hour }}
         </button>
       </div>
+    </div>
+
+    <div v-if="appointmentsStore.isValidReservation" class="flex justify-end">
+      <button 
+        class="w-full md:w-auto bg-blue-500 text-white rounded-lg font-black p-3"
+      >
+        Confirm Appointment
+      </button>
     </div>
   </div>
 
