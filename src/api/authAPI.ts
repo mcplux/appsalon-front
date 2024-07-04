@@ -12,5 +12,8 @@ export default {
   },
   verifyAccount(token: string) {
     return api.get(`auth/verify-account/${token}/`)
+  },
+  login(data:FormDataType) {
+    return api.post('auth/login/', data)
   }
 }
