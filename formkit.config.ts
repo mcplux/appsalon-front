@@ -10,7 +10,7 @@ const config = {
         input: 'w-full p-3 border border-gray-300 rounded text-gray-700 placeholder-gray-500',
       },
       submit: {
-        input: '$reset bg-blue-500 hover:bg-blue-600 transition-colors p-3 text-white font-bold rounded w-full mt-10',
+        input: '$reset bg-blue-500 hover:bg-blue-600 transition-colors p-3 text-white font-bold rounded w-full mt-10 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-blue-600',
       }
     })
   }

@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import { ref, type Ref } from 'vue'
+import { reset } from '@formkit/vue'
 import authAPI from '@/api/authAPI'
+import useToast from '@/composables/useToast'
 
 interface RegisterForm {
   first_name: string;
@@ -8,11 +11,30 @@ interface RegisterForm {
   password_confirm: string;
 }
 
-const handleSubmit = async ({ password_confirm, ...data }:RegisterForm) => {
+const loading:Ref<boolean> = ref(false)
+
+const { openToast } = useToast()
+
+const handleSubmit = async ({ password_confirm, ...formData }:RegisterForm) => {
   try {
-    await authAPI.register(data);
-  } catch (error) {
-    console.error(error)
+
+    loading.value = true
+    const { data } = await authAPI.register(formData);
+    openToast(data.message)
+    reset('register-form')
+
+  } catch (error:any) {
+
+    if(error.response.data.message) {
+      openToast(error.response.data.message, 'error')
+    } else {
+      openToast('An error occurred, try again later', 'error')
+    }
+
+  } finally {
+
+    loading.value = false
+
   }
 };
 </script>
@@ -21,8 +43,8 @@ const handleSubmit = async ({ password_confirm, ...data }:RegisterForm) => {
   <h1 class="text-6xl font-extrabold text-white text-center">Register</h1>
   <p class="text-2xl text-white text-center mt-5">Create an account on AppSalon</p>
 
-  <FormKit type="form" :actions="false" @submit="handleSubmit">
-    <FormKit 
+  <FormKit id="register-form" type="form" :actions="false" @submit="handleSubmit">
+    <FormKit
       type="text"
       label="Name"
       name="first_name"
@@ -54,7 +76,7 @@ const handleSubmit = async ({ password_confirm, ...data }:RegisterForm) => {
       validation="required|confirm"
     />
 
-    <FormKit type="submit">
+    <FormKit type="submit" :disabled="loading">
       Create account
     </FormKit>
   </FormKit>
