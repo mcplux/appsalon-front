@@ -16,6 +16,11 @@ const router = createRouter({
       component: AppointmentsLayout,
       children: [
         {
+          path: '',
+          name: 'my-appointments',
+          component: () => import('@/views/Appointments/MyAppointmentsView.vue'),
+        },
+        {
           path: 'new',
           component: () => import('@/views/Appointments/NewAppointmentLayout.vue'),
           children: [

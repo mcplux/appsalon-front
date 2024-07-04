@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, type Ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { reset } from '@formkit/vue'
 import authAPI from '@/api/authAPI'
 import useToast from '@/composables/useToast'
 
@@ -10,6 +12,7 @@ interface LoginForm {
 
 const loading:Ref<boolean> = ref(false)
 
+const router = useRouter()
 const { openToast } = useToast()
 
 const handleSubmit = async (formData:LoginForm) => {
@@ -18,6 +21,8 @@ const handleSubmit = async (formData:LoginForm) => {
     const { data: { refresh, access } } = await authAPI.login(formData)
     localStorage.setItem('refresh', refresh)
     localStorage.setItem('access', access)
+    reset('login-form')
+    router.push({ name: 'my-appointments' })
     openToast('Logged in successfully')
   } catch (error:any) {
     if(error.response.status === 401) {
