@@ -15,5 +15,13 @@ export default {
   },
   login(data:FormDataType) {
     return api.post('auth/login/', data)
+  },
+  user() {
+    const jwt:string = localStorage.getItem('access') as string || ''
+    return api.get('auth/user/', {
+      headers: {
+        Authorization: `Bearer ${jwt}`
+      }
+    })
   }
 }
