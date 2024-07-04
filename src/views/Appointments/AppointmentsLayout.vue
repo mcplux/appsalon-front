@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { useUserStore } from '@/stores/user'
 
+const userStore = useUserStore()
 </script>
 
 <template>
@@ -8,8 +10,12 @@
 
     <div class="flex flex-col space-y-5">
       <div class="flex justify-end gap-2 items-center">
-        <p class="text-white text-right">Hi, user</p>
-        <button type="button" class="bg-red-600 hover:bg-red-700 uppercase p-2 text-white transition-colors rounded text-xs font-bold">
+        <p class="text-white text-right">Hi, {{ userStore.getUserName }}</p>
+        <button 
+          type="button" 
+          class="bg-red-600 hover:bg-red-700 uppercase p-2 text-white transition-colors rounded text-xs font-bold"
+          @click="userStore.signOut"
+        >
           Sign out
         </button>
       </div>
