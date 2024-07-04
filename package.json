@@ -11,6 +11,8 @@
     "type-check": "vue-tsc --build --force"
   },
   "dependencies": {
+    "@formkit/themes": "^1.6.5",
+    "@formkit/vue": "^1.6.5",
     "axios": "^1.7.2",
     "pinia": "^2.1.7",
     "vue": "^3.4.29",
