@@ -62,6 +62,7 @@ const disableDates = (date:Date):boolean => {
     <div v-if="appointmentsStore.isValidReservation" class="flex justify-end">
       <button 
         class="w-full md:w-auto bg-blue-500 text-white rounded-lg font-black p-3"
+        @click="appointmentsStore.createAppointment"
       >
         Confirm Appointment
       </button>

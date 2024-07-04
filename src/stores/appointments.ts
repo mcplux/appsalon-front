@@ -20,6 +20,17 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     services.value.push(service)
   }
 
+  function createAppointment():void {
+    const appointment = {
+      services: services.value.map(service => service.id),
+      date: date.value,
+      time: time.value,
+      totalAmount:totalAmount.value,
+    }
+
+    console.log(appointment)
+  }
+
   const isServiceSelected:ComputedRef<(id:number) => boolean> = computed(() => {
     return id => services.value.some(service => service.id === id)
   })
@@ -50,6 +61,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     hours,
     time,
     onServiceSelected,
+    createAppointment,
     isServiceSelected,
     noServiceSelected,
     isValidReservation,
