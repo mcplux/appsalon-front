@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import authAPI from '@/api/authAPI'
+
 interface RegisterForm {
   first_name: string;
   email: string;
@@ -6,8 +8,12 @@ interface RegisterForm {
   password_confirm: string;
 }
 
-const handleSubmit = ({ password_confirm, ...data }:RegisterForm) => {
-  console.log(data)
+const handleSubmit = async ({ password_confirm, ...data }:RegisterForm) => {
+  try {
+    await authAPI.register(data);
+  } catch (error) {
+    console.error(error)
+  }
 };
 </script>
 
