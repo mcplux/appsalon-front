@@ -13,7 +13,7 @@ const authRoutes = [
       <RouterLink 
         v-for="route in authRoutes"
         :key="route.name"
-        :to="route.name"
+        :to="{ name: route.name }"
         class="uppercase font-bold text-white"
       >
         {{ route.text }}
