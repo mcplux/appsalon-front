@@ -1,8 +1,19 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
 const authRoutes = [
   { name: 'login', text: 'Log in your account' },
   { name: 'register', text: 'Create an account' },
 ]
+
+onMounted(() => {
+  if (localStorage.getItem('access')) {
+    router.push({ name: 'my-appointments' })
+  }
+})
 </script>
 
 <template>

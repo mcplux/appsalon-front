@@ -71,6 +71,7 @@ router.beforeEach(async (to, from, next) => {
     try {
       const { data } = await authAPI.user()
     } catch (error:any) {
+      localStorage.removeItem('access')
       next({ name: 'login' })
     }
   }
