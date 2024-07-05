@@ -18,10 +18,6 @@ export default {
   },
   user() {
     const jwt:string = localStorage.getItem('access') as string || ''
-    return api.get('auth/user/', {
-      headers: {
-        Authorization: `Bearer ${jwt}`
-      }
-    })
+    return api.get('auth/user/')
   }
 }
