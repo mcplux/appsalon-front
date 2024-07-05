@@ -1,12 +1,25 @@
 import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue'
 import { defineStore } from 'pinia'
+import { useRouter } from 'vue-router'
+import useToast from '@/composables/useToast'
+import appointmentsAPI from '@/api/appointmentsAPI'
+import { convertToISO } from '@/helpers'
 import type { Service } from '@/types'
 
 export const useAppointmentsStore = defineStore('appointments', () => {
+  const { openToast } = useToast()
+  const router = useRouter()
+  
   const services:Ref<Service[]> = ref([])
   const date:Ref<string> = ref('')
   const hours:Ref<string[]> = ref([])
   const time:Ref<string> = ref('')
+
+  function resetState(){
+    services.value = []
+    date.value = ''
+    time.value = ''
+  }
   
   function onServiceSelected(service:Service):void {
     if(services.value.some(selectedService => selectedService.id === service.id)) {
@@ -20,15 +33,22 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     services.value.push(service)
   }
 
-  function createAppointment():void {
+  async function createAppointment() {
     const appointment = {
       services: services.value.map(service => service.id),
-      date: date.value,
+      date: convertToISO(date.value),
       time: time.value,
-      totalAmount:totalAmount.value,
+      total_amount:totalAmount.value,
     }
 
-    console.log(appointment)
+    try {
+      const { data } = await appointmentsAPI.create(appointment)
+      openToast(data.message)
+      resetState()
+      router.push({ name: 'my-appointments' })
+    } catch (error) {
+      openToast('An error occurred, please try again later', 'error')
+    }
   }
 
   const isServiceSelected:ComputedRef<(id:number) => boolean> = computed(() => {

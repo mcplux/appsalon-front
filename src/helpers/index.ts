@@ -8,3 +8,11 @@ export const formatCurrency = (price:StringOrNumber):string => {
 
   return formatedCurrency
 }
+
+// This function receives a date in the format 'dd/mm/yyyy' and returns it in the format 'yyyy-mm-dd'
+export const convertToISO = (date:string):string => {
+  const dateArray = date.split('/')
+  const ISODate = new Date(`${dateArray[2]}-${dateArray[1]}-${dateArray[0]}`).toISOString().split('T')[0]
+
+  return ISODate
+}
