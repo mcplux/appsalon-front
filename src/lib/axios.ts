@@ -5,7 +5,9 @@ const api = axios.create({
 })
 
 api.interceptors.request.use((config) => {
-  const jwt = localStorage.getItem('access') || ''
+  if(!localStorage.getItem('access')) return config
+
+  const jwt = localStorage.getItem('access')
   config.headers.Authorization = `Bearer ${jwt}`
   return config
 })
