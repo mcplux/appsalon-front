@@ -1,4 +1,4 @@
-import { computed, onMounted, ref, type ComputedRef, type Ref } from 'vue'
+import { computed, onMounted, ref, watch, type ComputedRef, type Ref } from 'vue'
 import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import useToast from '@/composables/useToast'
@@ -14,6 +14,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
   const date:Ref<string> = ref('')
   const hours:Ref<string[]> = ref([])
   const time:Ref<string> = ref('')
+  const appointmentsByDate:Ref<any> = ref([])
 
   function resetState(){
     services.value = []
@@ -66,6 +67,12 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     return services.value.length > 0 && date.value !== '' && time.value !== ''
   })
 
+  const isDateSelected:ComputedRef<boolean> = computed(() => date.value !== '')
+
+  const isHourDisabled:ComputedRef<(hour:string) => boolean> = computed(() => {
+    return hour => appointmentsByDate.value.find((appointment:any) => appointment.time === hour)
+  })
+
   onMounted(() => {
     const startHour = 10
     const endHour = 19
@@ -73,6 +80,17 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     for(let hour = startHour; hour <= endHour; hour++) {
       hours.value.push(`${hour}:00`)
     }
+  })
+
+  watch(date, async () => {
+    time.value = ''
+    
+    if (date.value === '') {
+      return
+    }
+
+    const { data } = await appointmentsAPI.getByDate(convertToISO(date.value))
+    appointmentsByDate.value = data
   })
 
   return {
@@ -86,5 +104,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     noServiceSelected,
     isValidReservation,
     totalAmount,
+    isDateSelected,
+    isHourDisabled,
   }
 })
