@@ -6,5 +6,8 @@ export default {
   },
   getByDate(date:string) {
     return api.get(`appointments/?date=${date}`)
+  },
+  getUserAppointments() {
+    return api.get('auth/user/appointments')
   }
 }

@@ -16,3 +16,11 @@ export const convertToISO = (date:string):string => {
 
   return ISODate
 }
+
+// This function receives a date in the format 'yyyy-mm-ddThh:mm:ss' and returns it in the format 'dd/mm/yyyy'
+export const convertToDDMMYYYY = (date:string):string => {
+  const dateArray = date.split('T')[0].split('-')
+  const formattedDate = `${dateArray[2]}/${dateArray[1]}/${dateArray[0]}`
+
+  return formattedDate
+}
