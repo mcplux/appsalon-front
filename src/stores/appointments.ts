@@ -3,13 +3,14 @@ import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import useToast from '@/composables/useToast'
 import appointmentsAPI from '@/api/appointmentsAPI'
-import { convertToISO } from '@/helpers'
+import { convertToISO, convertToDDMMYYYY } from '@/helpers'
 import type { Service } from '@/types'
 
 export const useAppointmentsStore = defineStore('appointments', () => {
   const { openToast } = useToast()
   const router = useRouter()
   
+  const appointmentId:Ref<string|null> = ref(null)
   const services:Ref<Service[]> = ref([])
   const date:Ref<string> = ref('')
   const hours:Ref<string[]> = ref([])
@@ -20,6 +21,12 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     services.value = []
     date.value = ''
     time.value = ''
+  }
+
+  function setSelectedAppointment(appointment:any) {
+    services.value = appointment.services
+    date.value = convertToDDMMYYYY(appointment.date)
+    appointmentId.value = appointment.id
   }
   
   function onServiceSelected(service:Service):void {
@@ -90,7 +97,15 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     }
 
     const { data } = await appointmentsAPI.getByDate(convertToISO(date.value))
-    appointmentsByDate.value = data
+    
+    if (appointmentId.value !== null) {
+      // Editing...
+      appointmentsByDate.value = data.filter((appointment:any) => appointment.id !== appointmentId.value)
+      time.value = data.filter((appointment:any) => appointment.id === appointmentId.value)[0].time
+    } else {
+      // Creating...
+      appointmentsByDate.value = data
+    }
   })
 
   return {
@@ -98,6 +113,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     date,
     hours,
     time,
+    setSelectedAppointment,
     onServiceSelected,
     createAppointment,
     isServiceSelected,

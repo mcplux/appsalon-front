@@ -9,5 +9,8 @@ export default {
   },
   getUserAppointments() {
     return api.get('auth/user/appointments')
+  },
+  getById(id:string) {
+    return api.get(`appointments/${id}/`)
   }
 }
