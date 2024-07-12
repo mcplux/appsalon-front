@@ -37,6 +37,22 @@ const router = createRouter({
               component: () => import('@/views/Appointments/AppointmentView.vue'),
             },
           ]
+        },
+        {
+          path: ':id/edit',
+          component: () => import('@/views/Appointments/EditAppointmentLayout.vue'),
+          children: [
+            {
+              path: '',
+              name: 'edit-appointment',
+              component: () => import('@/views/Appointments/ServicesView.vue'),
+            },
+            {
+              path: 'details',
+              name: 'edit-appointment-details',
+              component: () => import('@/views/Appointments/AppointmentView.vue'),
+            },
+          ]
         }
       ]
     },
