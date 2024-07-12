@@ -130,6 +130,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     date,
     hours,
     time,
+    resetState,
     setSelectedAppointment,
     onServiceSelected,
     saveAppointment,
