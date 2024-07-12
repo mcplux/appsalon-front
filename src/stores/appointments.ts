@@ -3,12 +3,15 @@ import { defineStore } from 'pinia'
 import { useRouter } from 'vue-router'
 import useToast from '@/composables/useToast'
 import appointmentsAPI from '@/api/appointmentsAPI'
+import { useUserStore } from './user'
 import { convertToISO, convertToDDMMYYYY } from '@/helpers'
 import type { Service } from '@/types'
 
 export const useAppointmentsStore = defineStore('appointments', () => {
   const { openToast } = useToast()
   const router = useRouter()
+
+  const userStore = useUserStore()
   
   const appointmentId:Ref<string|null> = ref(null)
   const services:Ref<Service[]> = ref([])
@@ -18,6 +21,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
   const appointmentsByDate:Ref<any> = ref([])
 
   function resetState(){
+    appointmentId.value = null
     services.value = []
     date.value = ''
     time.value = ''
@@ -41,7 +45,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     services.value.push(service)
   }
 
-  async function createAppointment() {
+  async function saveAppointment() {
     const appointment = {
       services: services.value.map(service => service.id),
       date: convertToISO(date.value),
@@ -49,14 +53,27 @@ export const useAppointmentsStore = defineStore('appointments', () => {
       total_amount:totalAmount.value,
     }
 
-    try {
-      const { data } = await appointmentsAPI.create(appointment)
-      openToast(data.message)
-      resetState()
-      router.push({ name: 'my-appointments' })
-    } catch (error) {
-      openToast('An error occurred, please try again later', 'error')
+    if(appointmentId.value !== null) {
+      // Edit appointment...
+      try {
+        const { data } = await appointmentsAPI.update(appointmentId.value, appointment)
+        openToast(data.message)
+      } catch (error) {
+        openToast('An error occurred, please try again later', 'error')
+      }
+    } else {
+      // Create appointment...
+      try {
+        const { data } = await appointmentsAPI.create(appointment)
+        openToast(data.message)
+      } catch (error) {
+        openToast('An error occurred, please try again later', 'error')
+      }
     }
+
+    userStore.getUserAppointments()
+    resetState()
+    router.push({ name: 'my-appointments' })
   }
 
   const isServiceSelected:ComputedRef<(id:number) => boolean> = computed(() => {
@@ -101,7 +118,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     if (appointmentId.value !== null) {
       // Editing...
       appointmentsByDate.value = data.filter((appointment:any) => appointment.id !== appointmentId.value)
-      time.value = data.filter((appointment:any) => appointment.id === appointmentId.value)[0].time
+      time.value = data.filter((appointment:any) => appointment.id === appointmentId.value)[0]?.time
     } else {
       // Creating...
       appointmentsByDate.value = data
@@ -115,7 +132,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     time,
     setSelectedAppointment,
     onServiceSelected,
-    createAppointment,
+    saveAppointment,
     isServiceSelected,
     noServiceSelected,
     isValidReservation,
