@@ -76,6 +76,17 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     router.push({ name: 'my-appointments' })
   }
 
+  async function cancelAppointment(id:string) {
+    if(!confirm('Are you sure you want to cancel this appointment?')) return
+    try {
+      await appointmentsAPI.delete(id)
+      openToast('Appointment deleted successfully')
+      userStore.userAppointments = userStore.userAppointments.filter(appointment => appointment.id !== Number(id))
+    } catch (error:any) {
+      openToast(error.response.data.message, 'error')
+    }
+  }
+
   const isServiceSelected:ComputedRef<(id:number) => boolean> = computed(() => {
     return id => services.value.some(service => service.id === id)
   })
@@ -134,6 +145,7 @@ export const useAppointmentsStore = defineStore('appointments', () => {
     setSelectedAppointment,
     onServiceSelected,
     saveAppointment,
+    cancelAppointment,
     isServiceSelected,
     noServiceSelected,
     isValidReservation,

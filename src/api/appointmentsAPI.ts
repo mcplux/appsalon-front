@@ -8,12 +8,15 @@ export default {
     return api.get(`appointments/?date=${date}`)
   },
   getUserAppointments() {
-    return api.get('auth/user/appointments')
+    return api.get('auth/user/appointments/')
   },
   getById(id:string) {
     return api.get(`appointments/${id}/`)
   },
   update(id:string, data:any) {
     return api.put(`appointments/${id}/`, data)
+  },
+  delete(id:string) {
+    return api.delete(`appointments/${id}/`)
   }
 }
