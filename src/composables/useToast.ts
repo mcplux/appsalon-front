@@ -3,7 +3,7 @@ import 'vue-toast-notification/dist/theme-sugar.css'
 
 export default function useToast() {
   const toast = useToastNotification({
-    position: 'top-right',
+    position: 'top',
     duration: 3000,
   })
 
