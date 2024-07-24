@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAppointmentsStore } from '@/stores/appointments'
 import { formatCurrency } from '@/helpers'
+import type { Service } from '@/types'
 
 defineProps({
   service: {
@@ -22,7 +23,7 @@ const appointmentsStore = useAppointmentsStore()
     <button 
       type="button" 
       class="inline-flex items-center rounded bg-red-600 hover:bg-red-700 text-white text-sm px-3 py-2 font-semibold shadow-sm transition-colors"
-      @click="appointmentsStore.onServiceSelected(service)"
+      @click="appointmentsStore.onServiceSelected(service as Service)"
     >
       Delete
     </button>
